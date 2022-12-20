@@ -1,22 +1,16 @@
-package org.example.country;
+package org.example.dao;
+
+import org.example.model.City;
+import org.example.model.Country;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CountryConfig {
-    public static final String url = "jdbc:postgresql://localhost:5432/postgres";
-    public static final String user = "postgres";
-    public static final String password = "Jashtykketty";
-    public static Connection connection() {
-        Connection connect = null;
-        try {
-            connect = DriverManager.getConnection(url,user,password);
+import static org.example.util.Util.connection;
 
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-        return connect;
-    }
-
+public class CountryDaoImpl {
+    static Country country = new Country();
     public static void countryTable (){
         String sql = "CREATE TABLE IF NOT EXISTS country (" +
                 "id SERIAL PRIMARY KEY NOT NULL," +
@@ -50,6 +44,27 @@ public class CountryConfig {
         }
     }
 
-    public static void saveCountry(int id, String country_name, String president, int population, int capital_id) {
+    public static List<Country> getAllCountry() {
+        List<Country> countryList =new ArrayList<>();
+        String SQL = "SELECT * FROM country";
+        try {
+            Connection connection = connection();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SQL);
+            while (resultSet.next()){
+                country.setId(resultSet.getInt("id"));
+                country.setCountry_name(resultSet.getString("country_name"));
+                country.setPresident(resultSet.getString("president"));
+                country.setPopulation(resultSet.getInt("population"));
+                country.setCapital_id(resultSet.getInt("capital_id"));
+                countryList.add(country);
+                System.out.println(countryList);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return countryList;
     }
+
+
 }

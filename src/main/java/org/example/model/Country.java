@@ -1,4 +1,4 @@
-package org.example.country;
+package org.example.model;
 
 public class Country {
     int id;

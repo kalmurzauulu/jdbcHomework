@@ -1,22 +1,17 @@
-package org.example.city;
+package org.example.dao;
+
+import org.example.model.City;
+import org.example.model.Mayor;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CityConfig {
-    public static final String url = "jdbc:postgresql://localhost:5432/postgres";
-    public static final String user = "postgres";
-    public static final String password = "Jashtykketty";
-    public static Connection connection() {
-        Connection connect = null;
-        try {
-            connect = DriverManager.getConnection(url,user,password);
+import static org.example.util.Util.connection;
 
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-        return connect;
-    }
+public class CityDaoImpl {
 
+   static City city = new City();
     public static void cityTable (){
         String sql = "CREATE TABLE IF NOT EXISTS city (" +
                 "id SERIAL PRIMARY KEY NOT NULL," +
@@ -48,6 +43,30 @@ public class CityConfig {
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
+    }
+
+    public static List<City> getAllCity() {
+        List<City> cityList =new ArrayList<>();
+        String SQL = "SELECT * FROM city";
+        try {
+            Connection connection = connection();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SQL);
+            while (resultSet.next()){
+                city.setId((int) resultSet.getLong("id"));
+                city.setCity_name(resultSet.getString("city_name"));
+                city.setArea(resultSet.getString("area"));
+                city.setPopulation(resultSet.getInt("population"));
+                city.setMayor_id(resultSet.getInt("mayor_id"));
+
+
+                cityList.add(city);
+                System.out.println(cityList);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return cityList;
     }
 
 }

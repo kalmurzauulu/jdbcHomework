@@ -1,4 +1,4 @@
-package org.example.city;
+package org.example.model;
 
 public class City {
     int id;
